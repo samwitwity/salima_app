@@ -1,0 +1,257 @@
+
+CREATE TABLE persons(
+    id_pers      NUMBER NOT NULL ,
+    pers_n    VARCHAR2 (50) NOT NULL  ,
+    pers_p    VARCHAR2 (50) NOT NULL  ,
+    pers_t  NUMBER(10,0)   ,
+    pers_NNI             NUMBER(18,0)   ,
+    CONSTRAINT Pers_Pk PRIMARY KEY (id_pers)
+);
+create sequence seq_id_empl start 1 incremanted 1 ; 
+CREATE TABLE employee(
+    id_empl      NUMBER NOT NULL ,
+    empl_n    VARCHAR2 (50) NOT NULL  ,
+    empl_p    VARCHAR2 (50) NOT NULL  ,
+    empl_t  NUMBER(10,0)   ,
+    empl_NNI             NUMBER(18,0)   ,
+    empl_adr VARCHAR2 (50)  ,
+    empl_id_post number not null ,
+    empl_agen NUMBER NOT NULL ,
+    empl_mail varchar2(50) ,
+    empl_password varchar2(50 ) ,
+    CONSTRAINT Pers_Pk PRIMARY KEY (id_pers)
+);
+
+
+create table post (
+  id_post number not null ,
+  post_n varchar2(50) ,
+  post_profile varchar2(50) ,
+  CONSTRAINT Post_Pk PRIMARY KEY (id_post)
+
+);
+
+
+
+CREATE TABLE colis(
+    id_coli                 NUMBER NOT NULL ,
+    coli_prix               NUMBER NOT NULL ,
+    coli_qt                      NUMBER(10,0)   ,
+    coli_obs              VARCHAR2 (100)  ,
+    coli_date_env    DATE   ,
+    id_pers_env              NUMBER(10,0)   ,
+    coli_date_rec  DATE   ,
+    id_pers_rec      NUMBER(10,0)   ,
+    id_trav                     NUMBER(10,0)   ,
+    CONSTRAINT coli_Pk PRIMARY KEY (id_coli)
+);
+
+
+
+CREATE TABLE cars(
+    id_car        NUMBER NOT NULL ,
+    car_typ      varchar2(30)   ,
+    car_matr  VARCHAR2 (30)  ,
+    car_cap  NUMBER(10,0)   ,
+    id_emp_driv   NUMBER(10,0)   ,
+    CONSTRAINT car_Pk PRIMARY KEY (id_car)
+);
+
+create table drive (
+id_car        NUMBER NOT NULL ,
+id_empl      NUMBER NOT NULL ,
+
+CONSTRAINT drive_Pk PRIMARY KEY (id_car , id_emp )
+
+
+);
+
+
+
+CREATE TABLE travels(
+    id_trav                      NUMBER NOT NULL ,
+    trav_cout                    FLOAT   ,
+    trav_desc        VARCHAR2 (105)  , 
+    trav_date  DATE    ,
+    id_car                     NUMBER(10,0)   ,
+    id_traj                   NUMBER(10,0)   ,
+    CONSTRAINT trav_Pk PRIMARY KEY (id_trav)
+);
+
+CREATE TABLE agency(
+    id_agen    NUMBER NOT NULL ,
+    agen_n  VARCHAR2 (50) NOT NULL  ,
+    agen_adr varchar2(50) ,
+    agen_t  number(10) ,
+    agen_city number(10,),
+    CONSTRAINT agen_Pk PRIMARY KEY (id_agen)
+);
+
+CREATE TABLE voyagers(
+    voya_n    VARCHAR2 (50) NOT NULL  ,
+    voya_p    VARCHAR2 (50) NOT NULL  ,
+    voya_bag_pr   FLOAT  NOT NULL  , 
+    voya_tiket_pr  FLOAT  NOT NULL  ,
+    id_city_dep    number(10,),
+    id_city_arr    number(10,),
+    voya_t  NUMBER(10,0)   ,
+    voya_NNI             NUMBER(18,0)   ,
+    id_voya        NUMBER(10,0)  NOT NULL  ,
+    id_trav            NUMBER(10,0)   ,
+    CONSTRAINT voya_Pk PRIMARY KEY (id_voya),
+    etat_voya number(10,0) 
+   
+);
+
+CREATE TABLE citys(
+    id_city    NUMBER NOT NULL ,
+    city_n  VARCHAR2 (50)  ,
+    CONSTRAINT city_Pk PRIMARY KEY (id_city)
+);
+
+CREATE TABLE traject(
+     id_traj  NUMBER NOT NULL ,
+     traj_n varchar(30),
+    CONSTRAINT traj_Pk PRIMARY KEY (id_traj)
+);
+
+
+create table inf_traject (
+id_city  NUMBER(10,0)  NOT NULL  ,
+id_traj  NUMBER NOT NULL ,
+order  NUMBER ,
+ CONSTRAINT ref_traj_Pk PRIMARY KEY (id_city,id_traj)
+
+);
+
+
+
+
+ 
+ ALTER TABLE drive ADD FOREIGN KEY (id_emp) REFERENCES employee(id_emp); 
+ ALTER TABLE drive ADD FOREIGN KEY (id_car) REFERENCES cars(id_car); 
+ 
+ALTER TABLE employee ADD FOREIGN KEY (empl_id_post) REFERENCES post(id_post); 
+ALTER TABLE employee ADD FOREIGN KEY (empl_agen) REFERENCES agency(id_agen);
+
+ALTER TABLE colis ADD FOREIGN KEY (id_pers_rec) REFERENCES persons(id_pers);
+ALTER TABLE colis ADD FOREIGN KEY (id_pers_env) REFERENCES persons(id_pers);
+ALTER TABLE colis ADD FOREIGN KEY (id_trav) REFERENCES travels(id_trav);
+
+
+
+ALTER TABLE travels ADD FOREIGN KEY (id_car) REFERENCES cars(id_car);
+ALTER TABLE travels ADD FOREIGN KEY (id_traj) REFERENCES traject(id_traj);
+
+ALTER TABLE agency ADD FOREIGN KEY (agen_city) REFERENCES citys(id_city);
+
+
+ALTER TABLE voyagers ADD FOREIGN KEY (id_city_dep) REFERENCES citys(id_city);
+ALTER TABLE voyagers ADD FOREIGN KEY (id_city_arr) REFERENCES citys(id_city);
+ALTER TABLE voyagers ADD FOREIGN KEY (id_trav) REFERENCES travels(id_trav);
+
+ALTER TABLE inf_traject ADD FOREIGN KEY (id_city) REFERENCES citys(id_city);
+ALTER TABLE inf_traject ADD FOREIGN KEY (id_traj) REFERENCES traject(id_traj);
+
+
+
+
+
+
+
+
+CREATE SEQUENCE Seq_persons_id_pers START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE Seq_colis_id_coli START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE Seq_cars_id_car START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE Seq_travels_id_trav START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE Seq_citys_id_city START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE Seq_agency_id_agen START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE Seq_traject_id_traj START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE seq_id_empl START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE seq_id_post START WITH 1 INCREMENT BY 1 NOCYCLE;
+CREATE SEQUENCE seq_id_voya START WITH 1 INCREMENT BY 1 NOCYCLE;
+
+
+CREATE OR REPLACE TRIGGER trig_id_voya
+	BEFORE INSERT ON voyagers 
+  FOR EACH ROW 
+	WHEN (:NEW.id_voya IS NULL) 
+	BEGIN
+		 select Seq_id_voya.NEXTVAL INTO :NEW.id_voya from DUAL; 
+	END;
+
+
+CREATE OR REPLACE TRIGGER trig_id_post
+	BEFORE INSERT ON post 
+  FOR EACH ROW 
+	WHEN (:NEW.id_post IS NULL) 
+	BEGIN
+		 select Seq_id_post.NEXTVAL INTO :NEW.id_post from DUAL; 
+	END;
+
+CREATE OR REPLACE TRIGGER trig_id_empl
+	BEFORE INSERT ON employee 
+  FOR EACH ROW 
+	WHEN (:NEW.id_empl IS NULL) 
+	BEGIN
+		 select Seq_id_empl.NEXTVAL INTO :NEW.id_empl from DUAL; 
+	END;
+
+
+
+CREATE OR REPLACE TRIGGER trig_id_pers
+	BEFORE INSERT ON persons 
+  FOR EACH ROW 
+	WHEN (:NEW.id_pers IS NULL) 
+	BEGIN
+		 select Seq_persons_id_pers.NEXTVAL INTO :NEW.id_pers from DUAL; 
+	END;
+CREATE OR REPLACE TRIGGER trig_id_coli
+	BEFORE INSERT ON colis 
+  FOR EACH ROW 
+	WHEN (:NEW.id_coli IS NULL) 
+	BEGIN
+		 select Seq_colis_id_coli.NEXTVAL INTO :NEW.id_coli from DUAL; 
+	END;
+CREATE OR REPLACE TRIGGER trig_id_cars
+	BEFORE INSERT ON cars 
+  FOR EACH ROW 
+	WHEN (:NEW.id_car IS NULL) 
+	BEGIN
+		 select Seq_car_id_car.NEXTVAL INTO :NEW.id_car from DUAL; 
+	END;
+CREATE OR REPLACE TRIGGER trig_id_trav
+	BEFORE INSERT ON travels 
+  FOR EACH ROW 
+	WHEN (:NEW.id_trav IS NULL) 
+	BEGIN
+		 select Seq_travels_id_trav.NEXTVAL INTO :NEW.id_trav from DUAL; 
+	END;
+CREATE OR REPLACE TRIGGER trig_id_city
+	BEFORE INSERT ON citys 
+  FOR EACH ROW 
+	WHEN (:NEW.id_city IS NULL) 
+	BEGIN
+		 select Seq_citys_id_city.NEXTVAL INTO :NEW.id_city from DUAL; 
+	END;
+CREATE OR REPLACE TRIGGER trig_id_agen
+	BEFORE INSERT ON agency 
+  FOR EACH ROW 
+	WHEN (:NEW.id_agen IS NULL) 
+	BEGIN
+		 select Seq_agency_id_agen.NEXTVAL INTO :NEW.id_agen from DUAL; 
+	END;
+CREATE OR REPLACE TRIGGER trig_id_traj
+	BEFORE INSERT ON traject 
+  FOR EACH ROW 
+	WHEN (:NEW.id_traj IS NULL) 
+	BEGIN
+		 select Seq_traject_id_traj.NEXTVAL INTO :NEW.id_traj from DUAL; 
+	END;
+
+
+
+
+
+
+
